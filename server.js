@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-
+const db = require('./db/employeeDb');
 
 const trackerTitle = () => {
 
@@ -83,6 +83,25 @@ function viewAllByMgr() {
 function addEmployee() {
     inquirer.prompt([
         {
+            type: 'confirm',
+            name: 'empRole',
+            message: `Are you a manager?`
+        }
+    ]);
+    if (answer.empRole === true) {
+        // employee manager_id is not null and continue
+
+        addEmployeeCont();
+    }
+    else {
+        // employee manager_id is null
+        addEmployeeCont();
+    }
+}
+
+function addEmployeeCont() {
+    inquirer.prompt ([
+        {
             type: 'text',
             name: 'firstname',
             message: `What is the employee's first name?`
@@ -107,26 +126,21 @@ function addEmployee() {
             ]
         },
         {
-            type: 'confirm',
-            name: 'mid',
-            message: `Are you a manager?`
-        },
-        {
-            type: 'checkbox',
-            name: 'manager',
-            message: `Who is the employee's manager?`,
-            choices: [
-                'Sales Lead',
-                'Salesperson',
-                'Lead Engineer',
-                'Software Engineer',
-                'Accountant',
-                'Legal Team Lead',
-                'Lawyer'
-            ]
-        },
-    ])
+            name: 'prompt note',
+            message: 'You have successfully added a new employee!'
+        }
+    ]);
+    employeeTracker();
 };
+
+function removeEmployee() {
+    inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'remove',
+            message: `Which employee would you like to remove?`
+        },
+}
 
 
 // initialize node
