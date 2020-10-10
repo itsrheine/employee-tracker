@@ -1,0 +1,25 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "\"employee tracker generator\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsrheine/employee-tracker.git"
+  },
+  "author": "Marrione Nguyen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsrheine/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/itsrheine/employee-tracker#readme",
+  "dependencies": {
+    "ascii-table": "0.0.9",
+    "inquirer": "^7.3.3",
+    "prompts": "^2.3.2"
+  }
+}
