@@ -1,13 +1,13 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
-const account = account.createConnection({
+const account = mysql.createConnection({
     host: "localhost",
-    user: "root",
+    user: "",
     password: "24p@ssw0rd!",
     database: "employeeDb"
 });
 
-class Employee {
+class Index {
     constructor(account){
         this.account = account;
     }
@@ -25,6 +25,10 @@ class Employee {
                     // manager use names from employees
         return account.promise().query(allEmp);
     }
+
+    quit() {
+        account.end();
+    }
 }
 
-module.exports = db;
+module.exports = new Index(account);
