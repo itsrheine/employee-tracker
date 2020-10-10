@@ -1,12 +1,30 @@
 const mysql = require('mysql');
 
-// Connect to database
-const db = new mysql.Database('./db/employee.db', err => {
-    if (err) {
-        return console.error(err.message);
+const account = account.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "24p@ssw0rd!",
+    database: "employeeDb"
+});
+
+class Employee {
+    constructor(account){
+        this.account = account;
     }
 
-    console.log('Connected to the employee database.');
-});
+    getAllEmp() {
+
+        // list as how it would show on the tables using .headers on and .mode columns
+        const allEmp = 
+            `SELECT employees.id,
+                    employees.first_name,
+                    employees.last_name,
+                    roles.title,
+                    departments.dept_name,
+                    roles.salary`
+                    // manager use names from employees
+        return account.promise().query(allEmp);
+    }
+}
 
 module.exports = db;

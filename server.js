@@ -35,6 +35,8 @@ const employeeTracker = () => {
             switch (value.index) {
 
                 case 'View all employees':
+                    db.getAllEmp();  
+                    // GET EMPLOYEES from db JS!!!
                     viewAllEmployees();
                     break;
 
