@@ -1,15 +1,19 @@
 const mysql = require('mysql2');
 
-const account = mysql.createConnection({
+const connection = mysql.createConnection({
     host: "localhost",
-    user: "",
+    user: "root",
     password: "24p@ssw0rd!",
-    database: "employeeDb"
+    database: "employees"
 });
 
+connection.connect(function (err) {
+    if (err) throw err;
+  });
+
 class Index {
-    constructor(account){
-        this.account = account;
+    constructor(connection){
+        this.connection = connection;
     }
 
     getAllEmp() {
@@ -23,12 +27,12 @@ class Index {
                     departments.dept_name,
                     roles.salary`
                     // manager use names from employees
-        return account.promise().query(allEmp);
+        return connection.promise().query(allEmp);
     }
 
     quit() {
-        account.end();
+        connection.end();
     }
 }
 
-module.exports = new Index(account);
+module.exports = new Index(connection);

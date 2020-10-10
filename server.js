@@ -3,7 +3,7 @@ const db = require('./db/employeeDb');
 
 const trackerTitle = () => {
 
-    console.log (
+    console.log(
         `
         +------------------+
         | EMPLOYEE TRACKER |
@@ -13,12 +13,10 @@ const trackerTitle = () => {
 };
 
 // Main index node directory
-const employeeTracker = () => {
-
+function employeeTracker() {
     inquirer.prompt([
         {
-            type: 'checkbox',
-            name: 'index',
+            type: 'list',
             message: 'What would you like to do?',
             choices: [
                 'View all employees',
@@ -28,45 +26,46 @@ const employeeTracker = () => {
                 'Remove an employee',
                 'Update employee role',
                 'Update employee manager'
-            ]
+            ],
+            name: 'index'
         }
-    ])
-        .then(function(value) {
-            switch (value.index) {
+    ]).then(value => {
+        switch (value.index) {
 
-                case 'View all employees':
-                    db.getAllEmp() 
-                        .then(([rows]) => {
-                            var table = rows;
-                            console.table(table);
-                            employeeTracker();
-                        })
+            case 'View all employees':
+                db.getAllEmp()
+                    .then(([rows]) => {
+                        var table = rows;
+                        console.table(table);
+                        employeeTracker();
+                    })
+                break;
 
-                // case 'View all employees by department':
-                //     viewAllByDept();
-                //     break;
+            // case 'View all employees by department':
+            //     viewAllByDept();
+            //     break;
 
-                // case 'View all employees by manager':
-                //     viewAllByMgr();
-                //     break;
+            // case 'View all employees by manager':
+            //     viewAllByMgr();
+            //     break;
 
-                // case 'Add an employee':
-                //     addEmployee();
-                //     break;
+            // case 'Add an employee':
+            //     addEmployee();
+            //     break;
 
-                // case 'Remove an employee':
-                //     removeEmployee();
-                //     break;
+            // case 'Remove an employee':
+            //     removeEmployee();
+            //     break;
 
-                // case 'Update employee role':
-                //     updateEmpRole();
-                //     break;
+            // case 'Update employee role':
+            //     updateEmpRole();
+            //     break;
 
-                // case 'Update employee manager':
-                //     updateEmpMgr();
-                //     break;
-            }
-        })
+            // case 'Update employee manager':
+            //     updateEmpMgr();
+            //     break;
+        }
+    });
 };
 
 // function viewAllEmployees() {
