@@ -4,7 +4,7 @@ const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "24p@ssw0rd!",
-    database: "employees"
+    database: "employee"
 });
 
 connection.connect(function (err) {
@@ -20,12 +20,15 @@ class Index {
 
         // list as how it would show on the tables using .headers on and .mode columns
         const allEmp = 
-            `SELECT employees.id,
-                    employees.first_name,
-                    employees.last_name,
+            `SELECT employee.id,
+                    employee.first_name,
+                    employee.last_name,
                     roles.title,
-                    departments.dept_name,
-                    roles.salary`
+                    department.name,
+                    roles.salary
+            FROM employee
+            LEFT JOIN roles on employee.role_id = roles.id
+            LEFT JOIN department on department.name = department.id`
                     // manager use names from employees
         return connection.promise().query(allEmp);
     }

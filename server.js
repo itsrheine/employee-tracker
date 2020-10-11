@@ -35,8 +35,8 @@ function employeeTracker() {
             case 'View all employees':
                 db.getAllEmp()
                     .then(([rows]) => {
-                        var table = rows;
-                        console.table(table);
+                        var employee = rows;
+                        console.table(employee);
                         employeeTracker();
                     })
                 break;
