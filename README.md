@@ -42,8 +42,8 @@ If you have any questions or concerns, please feel free to reach out to my:
 - Github: [itsrheine](https://github.com/itsrheine)
 
 # Screenshot
-![Screenshot]()
-![Screenshot]()
+![Screenshot](assets/ss0.JPG)
+![Screenshot](assets/ss1.JPG)
 
 
   
