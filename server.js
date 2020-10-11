@@ -1,4 +1,7 @@
+const { resolveSrv } = require('dns');
 const inquirer = require('inquirer');
+const { title } = require('process');
+const { viewAllEmp } = require('./db/employeeDb');
 const db = require('./db/employeeDb');
 
 const trackerTitle = () => {
@@ -17,23 +20,23 @@ function employeeTracker() {
     inquirer.prompt([
         {
             type: 'list',
+            name: 'index',
             message: 'What would you like to do?',
             choices: [
                 'View all employees',
-                'View all employees by department',
-                'View all employees by manager',
+                'View all departments',
+                'View all roles',
                 'Add an employee',
-                'Remove an employee',
+                'Add a role',
+                'Add a department',
                 'Update employee role',
-                'Update employee manager'
             ],
-            name: 'index'
         }
     ]).then(value => {
         switch (value.index) {
 
             case 'View all employees':
-                db.getAllEmp()
+                db.viewAllEmp()
                     .then(([rows]) => {
                         var employee = rows;
                         console.table(employee);
@@ -41,111 +44,176 @@ function employeeTracker() {
                     })
                 break;
 
-            // case 'View all employees by department':
-            //     viewAllByDept();
-            //     break;
+            case 'View all departments':
+                db.viewAllByDept()
+                    .then(([rows]) => {
+                        var department = rows;
+                        console.table(department)
+                        employeeTracker();
+                    })
+                break;
 
-            // case 'View all employees by manager':
-            //     viewAllByMgr();
-            //     break;
+            case 'View all roles':
+                db.viewAllByRole()
+                    .then(([rows]) => {
+                        var role = rows;
+                        console.table(role);
+                        employeeTracker();
+                    })
+                break;
 
-            // case 'Add an employee':
-            //     addEmployee();
-            //     break;
+            case 'Add an employee':
+                addEmployee();
+                break;
 
-            // case 'Remove an employee':
-            //     removeEmployee();
-            //     break;
+            case 'Add a role':
+                addARole();
+                break;
 
-            // case 'Update employee role':
-            //     updateEmpRole();
-            //     break;
+            case 'Add a department':
+                addDepartment();
+                break;
 
-            // case 'Update employee manager':
-            //     updateEmpMgr();
-            //     break;
+            case 'Update employee role':
+                updateEmpRole();
+                break;
         }
     });
 };
 
-// function viewAllEmployees() {
-//     // console log the table of all employees
-//     employeeTracker();
-// };
 
-// function viewAllByDept() {
-//     // console log the table of all employees
-//     employeeTracker();
-// };
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: `What's the first name of the employee?`,
+            name: 'firstName'
+        },
+        {
+            type: 'input',
+            message: `What's the last name of the employee?`,
+            name: 'lastName'
+        },
+        {
+            type: 'input',
+            message: `What's the employee's role id number?`,
+            name: 'roleId'
+        },
+        {
+            type: 'input',
+            message: 'What is the manager id number?',
+            name: 'managerId'
+        }
+    ])
+        .then(value => {
+            var employee = {
+                first_name: value.firstName,
+                last_name: value.lastName,
+                role_id: value.roleId,
+                manager_id: value.managerId
+            }
 
-// function viewAllByMgr() {
-//     // console log the table of all employees
-//     employeeTracker();  
-// };
+            db.addEmployee(employee)
+            console.log('You successfully added an employee.');
+            employeeTracker();
+        });
+};
 
-// function addEmployee() {
-//     inquirer.prompt([
-//         {
-//             type: 'confirm',
-//             name: 'empRole',
-//             message: `Are you a manager?`
-//         }
-//     ]);
-//     if (answer.empRole === true) {
-//         // employee manager_id is not null and continue
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is the department name?',
+            name: 'department'
+        }
+    ])
+        .then(value => {
+            var depart = {
+                department_name: value.department
+            }
+            db.addDept(depart)
+            console.log('You successfully added a department.');
+            employeeTracker();
+        });
+};
 
-//         addEmployeeCont();
-//     }
-//     else {
-//         // employee manager_id is null
-//         addEmployeeCont();
-//     }
-// }
+function addARole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is the name of the role?',
+            name: 'role'
+        },
+        {
+            type: 'input',
+            message: 'What is the salary for this position?',
+            name: 'salary'
+        },
+        {
+            type: 'input',
+            message: 'What is the department ID?',
+            name: 'department'
+        }
+    ])
+        .then(value => {
+            var role = {
+                title: value.role,
+                department_id: value.department,
+                salary: value.salary
+            }
+            db.addRole(role)
+            console.log('You successfully added a role.');
+            employeeTracker();
+        });
+};
 
-// function addEmployeeCont() {
-//     inquirer.prompt ([
-//         {
-//             type: 'text',
-//             name: 'firstname',
-//             message: `What is the employee's first name?`
-//         },
-//         {
-//             type: 'text',
-//             name: 'lastname',
-//             message: `What is the employee's last name?`
-//         },
-//         {
-//             type: 'checkbox',
-//             name: 'role',
-//             message: `What is the employee's role?`,
-//             choices: [
-//                 'Sales Lead',
-//                 'Salesperson',
-//                 'Lead Engineer',
-//                 'Software Engineer',
-//                 'Accountant',
-//                 'Legal Team Lead',
-//                 'Lawyer'
-//             ]
-//         },
-//         {
-//             name: 'prompt note',
-//             message: 'You have successfully added a new employee!'
-//         }
-//     ]);
-//     employeeTracker();
-// };
+function updateEmpRole() {
 
-// function removeEmployee() {
-//     inquirer.prompt ([
-//         {
-//             type: 'list',
-//             name: 'remove',
-//             message: `Which employee would you like to remove?`
-//         },
-//     ])
-// };
+    db.viewAllEmp()
+        .then(([rows]) => {
+            var employee = rows;
+            console.log(viewAllEmp());
+            const employeeList = employee.map(({ id, first_name, last_name }) => ({
+                name: `${first_name} ${last_name}`,
+                value: id
+            }))
 
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'employeeId',
+                    message: `Which employee's role do you want to update?`,
+                    choices: employeeList
+                }
+            ])
+                .then(value => {
+                    var employeeId = value.employeeId;
+
+                    // get role titles to display
+                    db.viewAllByRole()
+                        .then(([rows]) => {
+                            var roles = rows;
+                            const rolesList = roles.map(({ id, title }) => ({
+                                name: title,
+                                value: id
+                            }))
+
+                            inquirer.prompt([
+                                {
+                                    type: 'list',
+                                    name: 'roleId',
+                                    message: 'Select new role.',
+                                    choices: rolesList
+                                }
+                            ]).then(value => {
+                                db.updateEmployee(value.roleId, employeeId);
+                                console.log('You successfully updated the employee role.');
+                                employeeTracker();
+                            })
+                        });
+                })
+        })
+}
 
 // initialize node
 trackerTitle();

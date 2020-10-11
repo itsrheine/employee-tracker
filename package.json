@@ -5,10 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
-    "start": "node server.js",
-    "migrate": "mysql db/employees.db < db/schema.sql",
-    "seed": "mysql db/employees.db < db/seeds.sql",
-    "db": "mysql db/employees.db"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

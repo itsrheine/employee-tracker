@@ -1,6 +1,6 @@
 USE employee;
 
-INSERT INTO department (name)
+INSERT INTO department (department_name)
 VALUES 
   ('Sales'), 
   ('Engineering'), 
@@ -23,9 +23,9 @@ VALUES
   ('Virginia', 'Woolf', 1, 1),
   ('Piers', 'Gaveston', 1, NULL),
   ('Charles', 'LeRoi', 2, 1),
-  ('Katherine', 'Mansfield', 2, 1),
+  ('Katherine', 'Mansfield', 2, 2),
   ('Dora', 'Carrington', 3, NULL),
   ('Edward', 'Bellamy', 3, NULL),
-  ('Montague', 'Summers', 3, 1),
-  ('Octavia', 'Butler', 3, 1),
-  ('Unica', 'Zurn', 3, 1);
+  ('Montague', 'Summers', 3, 2),
+  ('Octavia', 'Butler', 3, 4),
+  ('Unica', 'Zurn', 3, 9);
