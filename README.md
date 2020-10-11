@@ -22,6 +22,7 @@ This is an employee tracker that let's users view the employee, department, and 
 - NPM inquirer
 - Bootstrap
 - Node.js 
+- MySQL
 
 # Installation
 Cloning of the repository is required.  This tracker is terminal based app.
