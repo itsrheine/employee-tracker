@@ -1,7 +1,4 @@
-const { resolveSrv } = require('dns');
 const inquirer = require('inquirer');
-const { title } = require('process');
-const { viewAllEmp } = require('./db/employeeDb');
 const db = require('./db/employeeDb');
 
 const trackerTitle = () => {
@@ -103,6 +100,15 @@ async function employeeTracker() {
 
 // ADD
 async function addEmployee() {
+
+    db.viewAllByRole()
+    .then(([rows]) => {
+        var roles = rows;
+        const rolesList = roles.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
+
     inquirer.prompt([
         {
             type: 'input',
@@ -115,9 +121,10 @@ async function addEmployee() {
             name: 'lastName'
         },
         {
-            type: 'input',
-            message: `What's the employee's role id number?`,
-            name: 'roleId'
+            type: 'list',
+            message: `What's the employee's position?`,
+            name: 'roleId',
+            choices: rolesList
         },
         {
             type: 'input',
@@ -137,6 +144,7 @@ async function addEmployee() {
             console.log('You successfully added an employee.');
             employeeTracker();
         });
+    })
 };
 
 async function addDepartment() {
