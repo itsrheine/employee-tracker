@@ -16,7 +16,7 @@ const trackerTitle = () => {
 };
 
 // Main index node directory
-function employeeTracker() {
+async function employeeTracker() {
     inquirer.prompt([
         {
             type: 'list',
@@ -27,9 +27,13 @@ function employeeTracker() {
                 'View all departments',
                 'View all roles',
                 'Add an employee',
+                'Remove an employee',
                 'Add a role',
+                'Remove a role',
                 'Add a department',
+                'Remove a department',
                 'Update employee role',
+                'Quit'
             ],
         }
     ]).then(value => {
@@ -66,23 +70,39 @@ function employeeTracker() {
                 addEmployee();
                 break;
 
+            case 'Remove an employee':
+                removeEmployee();
+                break;
+
             case 'Add a role':
                 addARole();
+                break;
+
+            case 'Remove a role':
+                removeARole();
                 break;
 
             case 'Add a department':
                 addDepartment();
                 break;
 
+            case 'Remove a department':
+                removeDepartment();
+                break;
+
             case 'Update employee role':
                 updateEmpRole();
+                break;
+
+            case 'Quit':
+                quit();
                 break;
         }
     });
 };
 
-
-function addEmployee() {
+// ADD
+async function addEmployee() {
     inquirer.prompt([
         {
             type: 'input',
@@ -119,7 +139,7 @@ function addEmployee() {
         });
 };
 
-function addDepartment() {
+async function addDepartment() {
     inquirer.prompt([
         {
             type: 'input',
@@ -137,7 +157,7 @@ function addDepartment() {
         });
 };
 
-function addARole() {
+async function addARole() {
     inquirer.prompt([
         {
             type: 'input',
@@ -167,12 +187,11 @@ function addARole() {
         });
 };
 
-function updateEmpRole() {
-
+// REMOVE
+async function removeEmployee() {
     db.viewAllEmp()
         .then(([rows]) => {
             var employee = rows;
-            console.log(viewAllEmp());
             const employeeList = employee.map(({ id, first_name, last_name }) => ({
                 name: `${first_name} ${last_name}`,
                 value: id
@@ -182,37 +201,119 @@ function updateEmpRole() {
                 {
                     type: 'list',
                     name: 'employeeId',
-                    message: `Which employee's role do you want to update?`,
+                    message: `Which employee would you like to remove?`,
                     choices: employeeList
                 }
             ])
                 .then(value => {
-                    var employeeId = value.employeeId;
+                    db.removeEmployee(value.employeeId);
+                    console.log('You successfully removed an employee.');
+                    employeeTracker();
+                })
+        });
+}
 
-                    // get role titles to display
-                    db.viewAllByRole()
-                        .then(([rows]) => {
-                            var roles = rows;
-                            const rolesList = roles.map(({ id, title }) => ({
-                                name: title,
-                                value: id
-                            }))
+async function removeARole() {
+    db.viewAllByRole()
+        .then(([rows]) => {
+            var roles = rows;
+            const rolesList = roles.map(({ id, title }) => ({
+                name: title,
+                value: id
+            }))
 
-                            inquirer.prompt([
-                                {
-                                    type: 'list',
-                                    name: 'roleId',
-                                    message: 'Select new role.',
-                                    choices: rolesList
-                                }
-                            ]).then(value => {
-                                db.updateEmployee(value.roleId, employeeId);
-                                console.log('You successfully updated the employee role.');
-                                employeeTracker();
-                            })
-                        });
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'roleId',
+                    message: 'Which role would you like to remove?',
+                    choices: rolesList
+                }
+            ])
+                .then(value => {
+                    db.removeRole(value.roleId);
+                    console.log('You successfully removed a role.');
+                    employeeTracker();
                 })
         })
+}
+
+async function removeDepartment() {
+    db.viewAllByDept()
+        .then(([rows]) => {
+            var department = rows;
+            const deptList = department.map(({ id, department_name }) => ({
+                name: department_name,
+                value: id
+            }))
+
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'deptId',
+                    message: 'Which department would you like to remove?',
+                    choices: deptList
+                }
+            ])
+                .then(value => {
+                    db.removeDepartment(value.deptId);
+                    console.log('You successfully removed a department.');
+                    employeeTracker();
+                })
+        })
+}
+
+// UPDATE
+async function updateEmpRole() {
+
+                db.viewAllEmp()
+                    .then(([rows]) => {
+                        var employee = rows;
+                        const employeeList = employee.map(({ id, first_name, last_name }) => ({
+                            name: `${first_name} ${last_name}`,
+                            value: id
+                        }))
+
+                        inquirer.prompt([
+                            {
+                                type: 'list',
+                                name: 'employeeId',
+                                message: `Which employee's role do you want to update?`,
+                                choices: employeeList
+                            }
+                        ])
+                            .then(value => {
+                                var employeeId = value.employeeId;
+
+                                // get role titles to display
+                                db.viewAllByRole()
+                                    .then(([rows]) => {
+                                        var roles = rows;
+                                        const rolesList = roles.map(({ id, title }) => ({
+                                            name: title,
+                                            value: id
+                                        }))
+
+                                        inquirer.prompt([
+                                            {
+                                                type: 'list',
+                                                name: 'roleId',
+                                                message: 'Select new role.',
+                                                choices: rolesList
+                                            }
+                                        ]).then(value => {
+                                            db.updateEmployee(value.roleId, employeeId);
+                                            console.log('You successfully updated the employee role.');
+                                            employeeTracker();
+                                        })
+                                    });
+                            })
+                    })
+}
+
+async function quit() {
+    console.log('Thank you for using the employee tracker!');
+    process.exit();
 }
 
 // initialize node

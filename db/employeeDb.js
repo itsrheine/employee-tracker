@@ -70,6 +70,24 @@ class Index {
         )
     }
 
+    removeEmployee(employeeId) {
+        return this.connection.promise().query(
+            `DELETE FROM employee WHERE id = ?`, employeeId
+        )
+    }
+
+    removeRole(roleId) {
+        return this.connection.promise().query(
+            `DELETE FROM roles WHERE id = ?`, roleId
+        )
+    }
+
+    removeDepartment(deptId) {
+        return this.connection.promise().query(
+            `DELETE FROM department WHERE id = ?`, deptId
+        )
+    }
+
     addDept(department_name) {
         return this.connection.promise().query(
             `INSERT INTO department SET ?`, department_name
